@@ -8,6 +8,7 @@ Based on [github.com/j6s/ergodone-qmk](https://github.com/j6s/ergodone-qmk)
 
 - `docker`
 - `make`
+- `git`
 
 ## Getting started
 
@@ -56,3 +57,5 @@ You might not want the `usercustom` folder and instead have your own. You can us
 ```bash
 KEYBOARD=foo KEYMAP=bar make flash
 ```
+
+This command will assume that you have the folder `./keyboard/foo` with a keymap `bar` inside.
