@@ -24,4 +24,12 @@ flash:
 		--name flash_firmware_run \
 		flash_firmware 
 
-
+# TODO: this should be automatic
+flashmacsilicone: 
+	docker build -t flash_firmware --platform linux/x86_64 -f Dockerfile.flash .
+	docker run --rm -it \
+		--privileged -v /dev:/dev \
+		--user $$(id -u):$$(id -g) \
+		-v "$(CURDIR)/build/built.hex:/root/keyboard.hex" \
+		--name flash_firmware_run \
+		flash_firmware 

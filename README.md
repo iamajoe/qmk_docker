@@ -19,6 +19,10 @@ Use `make build` to build the firmware.
 A `./build` folder is created with the hex inside.
 You should be able now to do `make flash` and flash that hex to the keyboard.
 
+### Macbook Silicone
+
+Because of the different kind of architecture you need to use for the flash process `make flashmacsilicone` instead
+
 ### Different keyboard
 
 You can use a different keyboard inside the `./keyboard` folder by running the commands like so:
