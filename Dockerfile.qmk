@@ -1,0 +1,15 @@
+FROM ghcr.io/qmk/qmk_base_container:latest
+
+RUN apt update
+RUN apt -y install build-essential git avrdude avrdude-doc gcc-avr avr-libc
+
+RUN python3 -m pip uninstall -y qmk || true
+RUN python3 -m pip install --upgrade pip setuptools wheel nose2 && \
+    python3 -m pip install qmk
+
+RUN qmk setup -y
+
+ENV KEYBOARD ergodox_ez
+ENV KEYMAP default
+
+CMD ln -s /root/keyboard /root/qmk_firmware/keyboards/${KEYBOARD} && rm -rf /root/qmk_firmware/*.hex && qmk compile -kb ${KEYBOARD} -km ${KEYMAP} && rm -rf /root/build/* && mv /root/qmk_firmware/*.hex /root/build/built.hex

@@ -1,0 +1,7 @@
+FROM ghcr.io/qmk/qmk_base_container:latest
+
+RUN apt update
+RUN apt -y install build-essential git avrdude avrdude-doc gcc-avr avr-libc
+RUN git clone https://github.com/kairyu/tkg-toolkit /root/tkg_toolkit --recursive
+
+CMD /root/tkg_toolkit/linux/bin/hid_bootloader_cli -w -v -mmcu=atmega32u4 /root/keyboard.hex"]
