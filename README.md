@@ -1,33 +1,58 @@
-# QMK docker
+# QMK utils
 
-Setup for building and flashing QMK firmware using docker.
+Setup for building and flashing QMK firmware.
 
 Based on [github.com/j6s/ergodone-qmk](https://github.com/j6s/ergodone-qmk)
 
 ## Requirements
 
-The setup assumes that you have docker and make installed. Alternatively (to make) you could run the `docker` commands inside the `Makefile` yourself and bypass this way the need of `make`.
+- `docker`
+- `make`
 
-## Building
+## Getting started
 
-Create a folder `./keyboard/usercustom` and inside, set the config files as per QMK documentation. Inside, you should have a `default` keymap.
+Create a folder `./keyboard/usercustom` and inside, set the keyboard config files as per QMK documentation with a `default` keymap.
 
-This repository contains everything that is needed for building & flashing the firmware - it will grab the latest copy of qmk_firmware
-automatically when building.
+## Build
 
-Use `make build` to build the firmware.
+```sh
+make build
+```
+
 A `./build` folder is created with the hex inside.
-You should be able now to do `make flash` and flash that hex to the keyboard.
 
-### Macbook Silicone
+## Flash
 
-Because of the different kind of architecture you need to use for the flash process `make flashmacsilicone` instead
+Any of these methods will run the `build` for you.
 
-### Different keyboard
+### Flash git local
 
-You can use a different keyboard inside the `./keyboard` folder by running the commands like so:
+This is my recommended flash method. The `tkg_toolkit` is cloned to your system and used directly.
+
+```sh
+make flash
+```
+
+### Flash through docker
+
+A docker container will be created with the `tkg_toolkit` inside and will run from there.
+
+```sh
+make flashdocker
+```
+
+#### Macbook Silicone
+
+Because of the different kind of architecture you need a different flash process
+
+```sh
+make flashdockermacsilicone
+```
+
+## Different keyboard
+
+You might not want the `usercustom` folder and instead have your own. You can use a different keyboard inside the `./keyboard` folder by running the commands like so:
 
 ```bash
-KEYBOARD=foo KEYMAP_NAME=bar make build
-KEYBOARD_HEX=zed.hex make flash
+KEYBOARD=foo KEYMAP=bar make flash
 ```
