@@ -14,15 +14,15 @@ ${TKG_DIR}:
 	git clone https://github.com/kairyu/tkg-toolkit ${TKG_DIR} --recursive
 
 build:
+	@echo "compiling ${KEYBOARD}:${KEYMAP}"
 	mkdir -p $(CURDIR)/build
 	docker build -t qmk_firmware -f Dockerfile.qmk .
 	docker run --rm -it \
 		-v "$(CURDIR)/keyboard:/root/keyboard" \
 		-v "$(CURDIR)/build:/root/build" \
-		-e "KEYBOARD=${KEYBOARD}" \
-		-e "KEYMAP=${KEYMAP}" \
 		--name qmk_build \
-		qmk_firmware 
+		qmk_firmware \
+		/bin/bash -c "rm -rf /root/qmk_firmware/*.hex; cp -rf /root/keyboard/* /root/qmk_firmware/keyboards; qmk compile -kb ${KEYBOARD} -km ${KEYMAP}; mv /root/qmk_firmware/*.hex /root/build/built.hex"
 
 qmkjsonconvert:
 	docker build -t qmk_firmware -f Dockerfile.qmk .
