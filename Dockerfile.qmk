@@ -12,4 +12,4 @@ RUN qmk setup -y
 ENV KEYBOARD ergodox_ez
 ENV KEYMAP default
 
-CMD ln -s /root/keyboard /root/qmk_firmware/keyboards/${KEYBOARD} && rm -rf /root/qmk_firmware/*.hex && qmk compile -kb ${KEYBOARD} -km ${KEYMAP} && rm -rf /root/build/* && mv /root/qmk_firmware/*.hex /root/build/built.hex
+ENTRYPOINT ln -s /root/keyboard /root/qmk_firmware/keyboards/${KEYBOARD} && rm -rf /root/qmk_firmware/*.hex && qmk compile -kb ${KEYBOARD} -km ${KEYMAP} && rm -rf /root/build/* && mv /root/qmk_firmware/*.hex /root/build/built.hex

@@ -21,11 +21,21 @@ build:
 		-v "$(CURDIR)/build:/root/build" \
 		-e "KEYBOARD=${KEYBOARD}" \
 		-e "KEYMAP=${KEYMAP}" \
-		--name qmk_firmware_run \
+		--name qmk_build \
 		qmk_firmware 
 
+qmkjsonconvert:
+	docker build -t qmk_firmware -f Dockerfile.qmk .
+	mv -f $(CURDIR)/keyboard/${KEYBOARD}/keymaps/${KEYMAP}/keymap.c $(CURDIR)/keyboard/${KEYBOARD}/keymaps/${KEYMAP}/keymap.c.old.$(shell date +%s) || true
+	docker run --rm -it \
+		-v "$(CURDIR)/keyboard/${KEYBOARD}/keymaps/${KEYMAP}:/root/keyboardkeymap" \
+		--name qmk_json_convert \
+		--entrypoint "" \
+		qmk_firmware \
+		/bin/bash -c "qmk json2c -o /root/keyboardkeymap/keymap.c /root/keyboardkeymap/keymap.json"
+
 flash: ${TKG_DIR} build
-	sudo ${HID_BOOTLOADER} -w -v -mmcu=atmega32u4 $(CURDIR)/build/built.hex:/root/keyboard.hex
+	sudo ${HID_BOOTLOADER} -w -v -mmcu=atmega32u4 $(CURDIR)/build/built.hex
 
 flashdocker: 
 	docker build -t flash_firmware -f Dockerfile.flash .
