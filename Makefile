@@ -13,6 +13,9 @@ endif
 ${TKG_DIR}:
 	git clone https://github.com/kairyu/tkg-toolkit ${TKG_DIR} --recursive
 
+clone:
+	git clone https://github.com/kairyu/tkg-toolkit ${TKG_DIR} --recursive
+
 build:
 	@echo "compiling ${KEYBOARD}:${KEYMAP}"
 	mkdir -p $(CURDIR)/build
@@ -37,21 +40,25 @@ qmkjsonconvert:
 flash: ${TKG_DIR} build
 	sudo ${HID_BOOTLOADER} -w -v -mmcu=atmega32u4 $(CURDIR)/build/built.hex
 
-flashdocker: 
+flashraw: ${TKG_DIR}
+	sudo apt install -y avrdude
+	sudo ${HID_BOOTLOADER} -w -v -mmcu=atmega32u4 $(CURDIR)/build/built.hex
+
+flashdocker:
 	docker build -t flash_firmware -f Dockerfile.flash .
 	docker run --rm -it \
 		--privileged -v /dev:/dev \
 		--user $$(id -u):$$(id -g) \
 		-v "$(CURDIR)/build/built.hex:/root/keyboard.hex" \
 		--name flash_firmware_run \
-		flash_firmware 
+		flash_firmware
 
 # TODO: this should be automatic
-flashdockermacsilicone: 
+flashdockermacsilicone:
 	docker build -t flash_firmware --platform linux/x86_64 -f Dockerfile.flash .
 	docker run --rm -it \
 		--privileged -v /dev:/dev \
 		--user $$(id -u):$$(id -g) \
 		-v "$(CURDIR)/build/built.hex:/root/keyboard.hex" \
 		--name flash_firmware_run \
-		flash_firmware 
+		flash_firmware
